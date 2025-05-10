@@ -1,0 +1,48 @@
+# Import necessary libraries
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+
+# Load the dataset
+df = pd.read_csv("boston_housing.csv")
+
+# Display basic information
+print("Dataset shape:", df.shape)
+print("First 5 rows:\n", df.head())
+print("\nSummary statistics:\n", df.describe())
+
+# Assign features (independent variables) to df_x by removing the target column 'price'
+df_x = df.drop("price", axis=1)
+print("\nFeature variables (df_x):\n", df_x.head())
+
+# Assign target variable (dependent variable) to df_y
+df_y = df["price"]
+print("\nTarget variable (df_y):\n", df_y.head())
+
+# Initialize the Linear Regression model
+reg = LinearRegression()
+
+# Split the data: 67% training and 33% testing
+x_train, x_test, y_train, y_test = train_test_split(df_x, df_y, test_size=0.33, random_state=42)
+
+# Train the model using training data
+reg.fit(x_train, y_train)
+
+# Print the coefficients for each feature
+print("\nModel Coefficients:\n", reg.coef_)
+
+# Predict the prices using test data
+y_pred = reg.predict(x_test)
+print("\nPredicted Prices (first 5):\n", y_pred[:5])
+
+# Compare first predicted vs actual price
+print("\nPredicted vs Actual (first sample):")
+print("Predicted:", y_pred[0])
+print("Actual:", y_test.iloc[0])
+
+# Calculate and print Mean Squared Error (MSE)
+mse = np.mean((y_pred - y_test) ** 2)
+print("\nMean Squared Error (MSE):", mse)
